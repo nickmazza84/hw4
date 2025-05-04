@@ -127,3 +127,41 @@ WHERE r.user_id = u.user_id
 GROUP BY u.user_id, u.username
 ORDER BY number_of_ratings DESC
 LIMIT 5;
+
+SELECT 
+    a.artist_name,
+    COUNT(s.song_id) AS number_of_songs
+FROM Song s
+JOIN Artist a ON s.artist_id = a.artist_id
+WHERE s.release_date BETWEEN '1990-01-01' AND '2010-12-31'
+GROUP BY a.artist_id, a.artist_name
+ORDER BY number_of_songs DESC
+LIMIT 10;
+
+SELECT 
+    s.title AS song_title,
+    COUNT(ps.playlist_id) AS number_of_playlists
+FROM PlaylistSong ps
+JOIN Song s ON ps.song_id = s.song_id
+GROUP BY s.song_id, s.title
+ORDER BY number_of_playlists DESC, s.title ASC
+LIMIT 10;
+
+SELECT 
+    s.title AS song_title,
+    a.artist_name,
+    COUNT(r.rating_id) AS number_of_ratings
+FROM Rating r
+JOIN Song s ON r.song_id = s.song_id
+JOIN Artist a ON s.artist_id = a.artist_id
+WHERE s.album_id IS NULL
+GROUP BY s.song_id, s.title, a.artist_name
+ORDER BY number_of_ratings DESC
+LIMIT 20;
+
+SELECT 
+    a.artist_name
+FROM Artist a
+JOIN Song s ON a.artist_id = s.artist_id
+GROUP BY a.artist_id, a.artist_name
+HAVING MAX(s.release_date) <= '1993-12-31';
